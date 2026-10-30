@@ -1,13 +1,23 @@
 {
- "name": "رِواق 2027",
+ "id": "./",
+ "name": "رِواق",
  "short_name": "رِواق",
+ "description": "منظّم الدراسة والعبادة والحياة اليومية",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
+ "display_override": [
+  "standalone"
+ ],
+ "orientation": "portrait",
  "dir": "rtl",
  "lang": "ar",
  "background_color": "#0e171d",
  "theme_color": "#127d79",
+ "categories": [
+  "education",
+  "productivity"
+ ],
  "icons": [
   {
    "src": "icon-192.png",
