@@ -1,4 +1,4 @@
-const V='riwaq-v4',F=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','css/style.css','js/app.js','js/onboard.js','js/quran.js','js/pwa.js'];
+const V='riwaq-v5',F=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','style.css','app.js','ui.js','onboard.js','quran.js','pwa.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(F)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url),own=u.origin===location.origin,api=u.hostname==='api.alquran.cloud';if(!own&&!api)return;
