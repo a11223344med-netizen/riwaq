@@ -1,0 +1,16 @@
+let sp='';
+const SECS=[['acct','الحساب والمزامنة','تسجيل الدخول والنسخ السحابي'],['look','المظهر والألوان','الألوان والخلفية والوضع'],['study','الدراسة','وقت المذاكرة والامتحان والمواد'],['worship','العبادات','المصحف والصلاة والأذكار'],['backup','النسخ الاحتياطي والبيانات','تصدير واستيراد واستعادة'],['priv','الخصوصية والأمان','أين تُحفظ بياناتك'],['lang','اللغة','العربية'],['help','المساعدة','تثبيت التطبيق على الهاتف'],['about','حول التطبيق','الإصدار والمعلومات']];
+function topBlocks(h){const out=[],re=/<\/?div\b[^>]*>/g;let d=0,s=-1,m;while((m=re.exec(h))){if(m[0][1]!='/'){if(d==0)s=m.index;d++}else{d--;if(d==0&&s>=0){out.push(h.slice(s,re.lastIndex));s=-1}}}return out}
+const SBK={look:/ألوان|الخلفية|المظهر/,study:/وقت المذاكرة|مدة المحاضرة|موعد الامتحان|بداية الخطة|نهاية كل أسبوع/,help:/تثبيت على الهاتف/};
+const lk2=(k,t)=>`<button class='opt' data-k='${k}' onclick='A.go(this)'><span style='flex:1'>${t}</span><span>‹</span></button>`;
+V.set=()=>{if(!sp)return`<h2>الإعدادات</h2><div class='bx'>${SECS.map(([k,t,d])=>`<button class='opt' data-k='${k}' onclick='A.sp(this)'><span style='flex:1'><b>${t}</b><div class='m'>${d}</div></span><span>‹</span></button>`).join('')}</div>`;
+const T=(SECS.find(x=>x[0]==sp)||[])[1];let h='';
+if(sp=='acct')h=V.acct();
+else if(['look','study','backup','help'].includes(sp)){h=topBlocks(V.data()).filter(b=>{const t=b.replace(/<[^>]+>/g,' '),k=Object.keys(SBK).find(k=>SBK[k].test(t));return sp=='backup'?!k:k==sp}).join('');if(sp=='study')h=`<div class='bx'>${lk2('subs','إدارة المواد')}${lk2('focus','جلسات التركيز')}</div>`+h}
+else if(sp=='worship')h=`<div class='bx'>${lk2('mus','المصحف والتفسير')}${lk2('quran','الختمات والورد')}${lk2('pray','الصلاة والأذكار ومواقيت الصلاة')}</div>`;
+else if(sp=='priv')h=`<div class='bx'><h3>أين تُحفظ بياناتك؟</h3><div class='m'>على جهازك فقط في متصفحك. لا تُرفع للسحابة إلا إذا سجّلت حسابًا وفعّلت المزامنة، وحينها تكون بياناتك مرتبطة بحسابك وحده بصلاحيات تمنع الآخرين من رؤيتها.</div><div class='m'>الخروج من الحساب لا يحذف بياناتك المحلية. حذف كل البيانات من «النسخ الاحتياطي والبيانات».</div><div class='m'>لا تُرسل بيانات إلى أي جهة إعلانات. المصحف والتفسير ومواقيت الصلاة تُجلب من خدمات خارجية عند طلبك فقط.</div></div>`;
+else if(sp=='lang')h=`<div class='bx'><b>العربية</b><div class='m'>اللغة الوحيدة المتاحة حاليًا.</div></div>`;
+else if(sp=='about')h=`<div class='bx'><b>رِواق</b><div class='cl'><span>الإصدار</span><b>2.0</b></div><div class='cl'><span>التخزين</span><b>${st.cloud&&st.cloud.uid?'محلي + سحابي':'محلي'}</b></div><div class='cl'><span>عدد المهام</span><b>${st.tasks.length}</b></div></div>`;
+return`<div class='row'><button class='b g' onclick='A.spb()'>→ الإعدادات</button></div><h2>${T}</h2>`+h};
+Object.assign(A,{sp(el){sp=el.dataset.k;R();scrollTo(0,0)},spb(){sp='';R()},go(el){tab=el.dataset.k;R();scrollTo(0,0)}});
+OTH.splice(OTH.indexOf('data'),1,'set');NM.set='الإعدادات';R();

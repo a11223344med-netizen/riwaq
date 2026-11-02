@@ -1,0 +1,12 @@
+(function(){const b=document.body;if(b&&b.insertAdjacentHTML&&!Q('#dg'))b.insertAdjacentHTML('beforeend',"<div id='dg'></div>")})();
+const nl=s=>E(s).replace(/\n/g,'<br>');
+dlgImpl=(m,o)=>new Promise(res=>{o=o||{};const d=Q('#dg');d.innerHTML=`<div class='dgb'><p>${nl(m)}</p><div class='row'><button class='b ${o.danger?'r':''}' id='dgy'>${E(o.ok||'تأكيد')}</button><button class='b g' id='dgn'>إلغاء</button></div></div>`;d.style.display='flex';const f=v=>{d.style.display='none';res(v)};Q('#dgy').onclick=()=>f(true);Q('#dgn').onclick=()=>f(false);d.onclick=e=>{if(e.target===d)f(false)}});
+askImpl=(m,v)=>new Promise(res=>{const d=Q('#dg');d.innerHTML=`<div class='dgb'><p>${nl(m)}</p><input id='dgi' value='${E(v==null?'':v)}'><div class='row'><button class='b' id='dgy'>حفظ</button><button class='b g' id='dgn'>إلغاء</button></div></div>`;d.style.display='flex';const f=x=>{d.style.display='none';res(x)};Q('#dgy').onclick=()=>f(Q('#dgi').value);Q('#dgn').onclick=()=>f(null);d.onclick=e=>{if(e.target===d)f(null)}});
+const chips=(id,opts,cur)=>`<input type='hidden' id='${id}' value='${E(cur)}'><div class='chips' data-t='${id}'>${opts.map(([v,t])=>`<button type='button' class='ch ${v==cur?'on':''}' data-v='${E(v)}' onclick='A.chip(this)'>${E(t)}</button>`).join('')}</div>`;
+const pl=q=>`<button class='opt' data-id='' onclick='A.pickSet(this)'><span>بلا مهمة</span></button>`+st.tasks.filter(t=>t.st=='open'&&(!q||t.n.includes(q)||S[t.s][0].includes(q))).map(t=>`<button class='opt' data-id='${t.id}' onclick='A.pickSet(this)'>${chip(t)}<span>${E(t.n)}</span></button>`).join('');
+Object.assign(A,{chip(el){const g=el.parentNode;[...g.children].forEach(x=>x.classList.remove('on'));el.classList.add('on');Q('#'+g.dataset.t).value=el.dataset.v},
+pickT(){M(`<h2>اختر المهمة</h2><input placeholder='ابحث باسم المهمة أو المادة' oninput='A.pqf(this.value)'><div id='pl' class='pls'>${pl('')}</div><button class='b g' onclick='XM()'>إغلاق</button>`)},
+pqf(v){Q('#pl').innerHTML=pl(v.trim())},
+pickSet(el){st.tm.task=el.dataset.id;save();XM();R()}});
+const _nw=V.nw;V.nw=()=>_nw().replace(/<select id="ns">[\s\S]*?<\/select>/,(subIds().length?chips('ns',subIds().map(k=>[k,S[k][0]]),subIds()[0]):"<div class='w'>أضف مادة أولًا من «المواد» في المزيد.</div>"));
+const _rv2=V.rev;V.rev=()=>_rv2().replace(/<select id="rk">[\s\S]*?<\/select>/,chips('rk',[['يومية','يومية'],['أسبوعية','أسبوعية']],'يومية'));
