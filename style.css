@@ -80,3 +80,5 @@ details{margin:10px 0}summary{cursor:pointer;color:var(--mut)}.lg2{border-right:
 @supports not (color:color-mix(in srgb,red 50%,blue)){nav button.on{background:#127d7933}.pi.ok{background:#1d7a4a30}.hm .hc1{background:#127d7966}.hm .hc2{background:#127d79aa}.hm .hc3{background:#127d79dd}.why{background:#b87d1230}}
 
 .dot{width:14px;height:14px;border-radius:50% 50% 3px 3px;flex:none}.sw.on{outline:3px solid var(--gd);outline-offset:2px}
+
+nav svg{display:block}.row>.c{flex:none}

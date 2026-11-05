@@ -9,7 +9,7 @@ ${b?'':`<button class='fl' onclick='A.pickT()'>${tk?E(tk.n):'اربط الجلس
 <div class='m' style='text-align:center'>${tm.run?'يعمل بالوقت الفعلي حتى لو أغلقت الشاشة.':'لن تُسجَّل الجلسة إلا بتأكيدك.'}</div></div>
 <div class='st3'><div><b>${sm(ss)}</b>دقيقة اليوم</div><div><b>${sm(wk)}</b>دقيقة الأسبوع</div><div><b>${ss.length}</b>جلسات اليوم</div></div>
 <div class='bx'><h3>سجل اليوم</h3>${ss.length?ss.map(x=>`<div class='t' style='cursor:default'><div class='n'>${x.min} د<div class='m'>${E(x.tn||'بلا مهمة')}</div></div><button class='b g' data-id='${x.id}' onclick='A.delS2(this)'>حذف</button></div>`).join(''):`<div class='e'>لا جلسات مؤكدة اليوم</div>`}</div>
-<button class='b g' onclick='A.fsnd()'>${st.set.snd?'🔔 الصوت مفعّل':'🔕 الصوت متوقف'}</button>`};
+<button class='b g' onclick='A.fsnd()'>${st.set.snd?'الصوت مفعّل':'الصوت متوقف'}</button>`};
 function fupd(){const r=Q('#fr'),t=Q('#ft');if(!r||!t)return;const l=tmRem(),tot=tmTot(),C=339.3;t.textContent=pad(Math.floor(l/60))+':'+pad(l%60);r.style.strokeDasharray=C;r.style.strokeDashoffset=C*(1-(tot?l/tot:0))}
 function fdraw(){const tm=st.tm;if(tm.run&&tmRem()<=0){tm.run=0;tm.left=0;save();fend()}fupd()}
 function fsave(mn){const t=st.tasks.find(x=>x.id==st.tm.task);st.sess.push({id:'s'+Date.now()+Math.random().toString(36).slice(2,6),min:mn,day:iso(new Date()),tn:t?t.n:''});if(t)hist(t,'جلسة تركيز '+mn+' د')}

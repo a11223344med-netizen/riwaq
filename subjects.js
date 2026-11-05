@@ -11,6 +11,6 @@ sbSave(el){const s=st.subs.find(x=>x.id==el.dataset.id),n=nn(Q('#se_n').value);i
 sbHide(el){const s=st.subs.find(x=>x.id==el.dataset.id);s.h=s.h?0:1;save();XM();R();toast(s.h?'أُرشفت المادة وبياناتها محفوظة':'أُعيدت المادة')},
 async sbDel(el){const s=st.subs.find(x=>x.id==el.dataset.id);if(subCnt(s.id)[1])return toast('فيها مهام. أرشفها بدل الحذف','e');if(!await dlg('حذف مادة «'+s.n+'»؟',{danger:1,ok:'حذف'}))return;st.subs=st.subs.filter(x=>x.id!=s.id);save();XM();R();toast('حُذفت المادة')},
 sbMv(el){const i=st.subs.findIndex(x=>x.id==el.dataset.id),j=i+ +el.dataset.d;if(j<0||j>=st.subs.length)return;[st.subs[i],st.subs[j]]=[st.subs[j],st.subs[i]];save();R()}});
-const _sa=A.seedAgain;A.seedAgain=function(){BI.forEach(b=>{if(!st.subs.some(s=>s.id==b.id))st.subs.push({...b})});return _sa.apply(this,arguments)};
+const _sa=A.seedAgain;A.seedAgain=function(){BI.forEach(b=>{if(!st.subs.some(s=>s.id==b.id))st.subs.push({...b})});applySubs();return _sa.apply(this,arguments)};
 const _an=A.addNew;A.addNew=function(){if(!Q('#ns'))return toast('أضف مادة أولًا','e');return _an.apply(this,arguments)};
 OTH.splice(1,0,'subs');NM.subs='المواد';R();

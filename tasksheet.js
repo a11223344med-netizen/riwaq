@@ -6,7 +6,7 @@ M(`<div class='sh'><div class='row' style='align-items:center'>${chip(t)}<span c
 <textarea class='nt' rows='2' placeholder='ملاحظات…' onchange='A.note("${id}",this.value)'>${E(t.notes)}</textarea>
 <button class='b big' ${miss.length&&!dn?'disabled':''} onclick='A.done("${id}")'>${dn?'إعادة فتح المهمة':'إكمال المهمة'}</button>
 ${miss.length&&!dn?`<div class='why'>لم تكتمل الخطوات المطلوبة: ${miss.map(k=>SP[k]).join('، ')} · <a onclick='A.force("${id}")'>إغلاق يدوي</a></div>`:''}
-<div class='act'><button class='b g' onclick='A.focusOn("${id}")'>ابدأ تركيز</button>${dn?'':`<button class='b g' onclick='A.pp("${id}")'>نقل لبكرة</button><button class='b g' onclick='A.rs("${id}")'>إعادة جدولة</button>`}<button class='b g' onclick='A.edit("${id}")'>تعديل</button></div>
+<div class='act'><button class='b g' onclick='A.focusOn("${id}")'>ابدأ تركيز</button>${dn?'':`<button class='b g' onclick='A.rmTask("${id}")'>ذكّرني</button>`}${dn?'':`<button class='b g' onclick='A.pp("${id}")'>نقل لبكرة</button><button class='b g' onclick='A.rs("${id}")'>إعادة جدولة</button>`}<button class='b g' onclick='A.edit("${id}")'>تعديل</button></div>
 <details><summary>سجل التغييرات (${t.hist.length})</summary>${t.hist.slice().reverse().map(h=>`<div class='lg2'><b>${new Date(h.t).toLocaleDateString('ar')}</b> ${new Date(h.t).toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'})}<br>${E(h.m)}</div>`).join('')}</details>
 <div class='row' style='margin-top:12px'><button class='b g' onclick='XM()'>إغلاق</button><button class='b r' onclick='A.del("${id}")'>حذف</button></div></div>`)},
 step2(el){const id=el.dataset.id;A.step(id,el.dataset.k,!T(id).steps[el.dataset.k]);A.open(id)},
