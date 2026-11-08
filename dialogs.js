@@ -8,5 +8,5 @@ Object.assign(A,{chip(el){const g=el.parentNode;[...g.children].forEach(x=>x.cla
 pickT(){M(`<h2>اختر المهمة</h2><input placeholder='ابحث باسم المهمة أو المادة' oninput='A.pqf(this.value)'><div id='pl' class='pls'>${pl('')}</div><button class='b g' onclick='XM()'>إغلاق</button>`)},
 pqf(v){Q('#pl').innerHTML=pl(v.trim())},
 pickSet(el){st.tm.task=el.dataset.id;save();XM();R()}});
-const _nw=V.nw;V.nw=()=>_nw().replace(/<select id="ns">[\s\S]*?<\/select>/,(subIds().length?chips('ns',subIds().map(k=>[k,S[k][0]]),subIds()[0]):"<div class='w'>أضف مادة أولًا من «المواد» في المزيد.</div>"));
+
 const _rv2=V.rev;V.rev=()=>_rv2().replace(/<select id="rk">[\s\S]*?<\/select>/,chips('rk',[['يومية','يومية'],['أسبوعية','أسبوعية']],'يومية'));

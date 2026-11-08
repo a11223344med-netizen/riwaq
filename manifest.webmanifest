@@ -12,8 +12,8 @@
  "orientation": "portrait",
  "dir": "rtl",
  "lang": "ar",
- "background_color": "#354230",
- "theme_color": "#354230",
+ "background_color": "#0b3f3d",
+ "theme_color": "#127d79",
  "categories": [
   "education",
   "productivity"
