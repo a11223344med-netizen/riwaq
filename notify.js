@@ -1,9 +1,9 @@
 let nowD=()=>new Date();const NS={msg:'',days:[]},tmm=s=>{const p=String(s).split(':');return +p[0]*60+ +p[1]};
 const NTD={on:0,prayer:1,pmin:10,azp:0,jum:1,study:1,stime:'17:00',habit:1,htime:'21:00',azk:1,mtime:'06:00',etime:'17:30',wird:1,wtime:'20:00',streak:1,strt:'21:00',overdue:1,otime:'09:00',exam:1,newd:1,ntime:'08:00',wrev:1,wday:5,rtime:'20:00',bedr:0,bmin:30,badge:1,focus:1,dnd:0,from:'23:00',to:'05:00'};
-const nt=()=>(st.set.nt=Object.assign({},NTD,st.set.nt));
+const nt=()=>{const s=st.set.nt||(st.set.nt={});for(const k in NTD)if(s[k]===undefined)s[k]=NTD[k];return s};
 const inDnd=now=>{const n=nt();if(!n.dnd)return false;const m=now.getHours()*60+now.getMinutes(),f=tmm(n.from),t=tmm(n.to);return f>t?(m>=f||m<t):(m>=f&&m<t)};
 const doneToday=k=>st.tasks.some(t=>t.doneAt&&iso(new Date(t.doneAt))==k)||st.sess.some(x=>x.day==k);
-function ntPlan(now){const n=nt(),k=iso(now),dow=now.getDay(),L=[],o=off(),add=(m,key,t,b,ty,data)=>{if(m>=0&&m<1440)L.push({m,key:k+'|'+key,t,b,ty,data:data||{}})},pd=st.prayed[k]||{};
+function ntPlan(now,o0){const n=nt(),k=iso(now),dow=now.getDay(),L=[],o=o0==null?off():o0,add=(m,key,t,b,ty,data)=>{if(m>=0&&m<1440)L.push({m,key:k+'|'+key,t,b,ty,data:data||{}})},pd=st.prayed[k]||{};
 if(n.prayer)PR.forEach(([i,nm])=>{if(st.pt[i])add(Math.max(0,tmm(st.pt[i])-n.pmin),'p-'+i,nm,n.pmin?'بعد '+n.pmin+' دقيقة ('+st.pt[i]+')':'حان وقت الصلاة ('+st.pt[i]+')','prayer',{tab:'pray'})});
 if(n.azp)PR.forEach(([i,nm])=>{if(st.pt[i])add(tmm(st.pt[i])+5,'ap-'+i,'أذكار بعد '+nm,'وقت أذكار ما بعد الصلاة','azk',{tab:'pray'})});
 if(n.jum&&dow==5&&st.pt.dhuhr)add(tmm(st.pt.dhuhr)-60,'jum','الجمعة','استعد لصلاة الجمعة','prayer',{tab:'pray'});

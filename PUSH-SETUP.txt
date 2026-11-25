@@ -1,0 +1,44 @@
+رِواق — إعداد إشعارات الخلفية (Push) من الهاتف
+================================================
+الفكرة: التطبيق يحفظ إشعارات الأيام الثلاثة القادمة في Supabase، ودالة تعمل كل دقيقة تبعثها لهاتفك حتى والتطبيق مغلق.
+لا ترسل لي أي مفتاح سري. المفتاح الخاص يبقى عندك وفي Supabase فقط.
+
+1) قاعدة البيانات
+   Supabase ← SQL Editor ← New query ← الصق محتوى 0002_push.sql ← Run.
+   (تأكد قبلها أن 0001_init.sql اشتغل، وأن الحساب والمزامنة يعملان.)
+
+2) توليد مفاتيح VAPID (من التطبيق)
+   رِواق ← المزيد ← الإشعارات ← «توليد مفاتيح VAPID».
+   انسخ المفتاح الخاص إلى ملاحظة آمنة. المفتاح العام يوضع تلقائيًا في التطبيق.
+
+3) الدالة
+   Supabase ← Edge Functions ← Create a new function ← الاسم: send-push ← الصق محتوى send-push.ts ← Deploy.
+   من إعدادات الدالة أطفئ «Verify JWT» (لأن الجدولة لا ترسل JWT).
+
+4) الأسرار (Secrets)
+   Supabase ← Project Settings ← Edge Functions ← Secrets، أضف:
+     VAPID_PUBLIC   = المفتاح العام
+     VAPID_PRIVATE  = المفتاح الخاص
+     VAPID_SUBJECT  = mailto:بريدك@example.com
+     CRON_SECRET    = أي نص طويل عشوائي تختاره
+
+5) الجدولة كل دقيقة
+   Supabase ← Database ← Extensions: فعّل pg_cron و pg_net.
+   ثم SQL Editor ونفّذ (بدّل <CRON_SECRET> بالنص الذي اخترته):
+     select cron.schedule('riwaq-send-push','* * * * *',
+       $$select net.http_post(
+           url:='https://raqyhwhtcipwedqgtptv.supabase.co/functions/v1/send-push',
+           headers:=jsonb_build_object('x-cron-secret','<CRON_SECRET>','Content-Type','application/json'),
+           body:='{}'::jsonb)$$);
+
+6) التفعيل في التطبيق
+   سجّل الدخول ← المزيد ← الإشعارات ← فعّل الإشعارات المحلية ← «تفعيل إشعارات الخلفية».
+
+7) التجربة
+   أضف تذكيرًا خاصًا بعد دقيقتين، أغلق التطبيق تمامًا، وانتظر.
+
+ملاحظات:
+ - على الآيفون يلزم «إضافة إلى الشاشة الرئيسية» (iOS 16.4 فأعلى).
+ - توفير البطارية في أندرويد قد يؤخر الإشعار.
+ - زر «غفوة» والتطبيق مغلق يفتح التطبيق ويجدول الغفوة محليًا.
+ - بعد تغيير أي إعداد إشعارات، يعيد التطبيق الجدولة تلقائيًا خلال ثوانٍ (يلزم فتح التطبيق لتحديث الجدول).

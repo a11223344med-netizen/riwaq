@@ -9,7 +9,7 @@ const aer=j=>AE[j&&j.error_code]||'تعذّر تنفيذ الطلب. تحقق م
 async function sb(path,o){o=o||{};const h={apikey:SB.key,'Content-Type':'application/json'};if(o.tok)h.Authorization='Bearer '+o.tok;if(o.prefer)h.Prefer=o.prefer;const r=await fetch(SB.url+path,{method:o.m||'GET',headers:h,body:o.b?JSON.stringify(o.b):undefined});let j=null;try{j=await r.json()}catch(e){}return{ok:r.ok,s:r.status,j}}
 const sess=j=>{const s=j.access_token?j:j.session;if(!s||!s.access_token)return false;const u=s.user||j.user||{};au={access:s.access_token,refresh:s.refresh_token,exp:Date.now()+(s.expires_in||3600)*1000,uid:u.id,email:u.email||u.phone||''};saveAu();return true};
 async function tok(){if(!au)return null;if(Date.now()>au.exp-60000){const r=await sb('/auth/v1/token?grant_type=refresh_token',{m:'POST',b:{refresh_token:au.refresh}});if(!r.ok||!sess(r.j)){if(r.s==400||r.s==401){au=null;saveAu()}return null}}return au.access}
-function onSave(){const c=cl();if(!c.syncing){c.dirty=true;c.ts=Date.now()}clearTimeout(syT);if(au&&st.set.cloudAuto!==0)syT=setTimeout(()=>sync(0),4000)}
+function onSave(){if(typeof pushDirty=='function')pushDirty();const c=cl();if(!c.syncing){c.dirty=true;c.ts=Date.now()}clearTimeout(syT);if(au&&st.set.cloudAuto!==0)syT=setTimeout(()=>sync(0),4000)}
 const isEmpty=()=>!st.tasks.length&&!st.sess.length&&!st.q.rd.length&&!st.rev.length&&!Object.values(st.lf||{}).some(a=>a.length);
 async function push(t,row,why){const c=cl(),data=strip(),ts0=c.ts;
 if(!row){try{if(!localStorage.getItem('riwaq27_precloud'))localStorage.setItem('riwaq27_precloud',JSON.stringify(st))}catch(e){}}
@@ -50,6 +50,6 @@ sbSync(){sync(1)},sbRetry(){loadProv(true)},sbAuto(){st.set.cloudAuto=st.set.clo
 async sbOut(){if(!await dlg('تسجيل الخروج؟\nبياناتك على هذا الجهاز تبقى كما هي.',{ok:'خروج'}))return;try{if(au)await sb('/auth/v1/logout',{m:'POST',tok:au.access})}catch(x){}au=null;saveAu();sy.msg='';R()}});
 OTH.unshift('acct');NM.acct='الحساب والمزامنة';
 if(typeof window!=='undefined'&&window.addEventListener)window.addEventListener('online',()=>{if(au&&cl().dirty)sync(0)});
-(function(){if(typeof location==='undefined'||!location.hash||!location.hash.includes('access_token='))return;const p=new URLSearchParams(location.hash.slice(1));au={access:p.get('access_token'),refresh:p.get('refresh_token'),exp:Date.now()+(+p.get('expires_in')||3600)*1000};saveAu();history.replaceState(null,'',location.pathname+location.search);sb('/auth/v1/user',{tok:au.access}).then(r=>{if(r.ok){au.uid=r.j.id;au.email=r.j.email||r.j.phone||'';saveAu();tab='acct';R();sync(1)}})})();
+(function(){if(typeof location==='undefined'||!location.hash||!location.hash.includes('access_token='))return;const p=new URLSearchParams(location.hash.slice(1));au={access:p.get('access_token'),refresh:p.get('refresh_token'),exp:Date.now()+(+p.get('expires_in')||3600)*1000};saveAu();if(p.get('type')=='recovery')sy.rec=1;history.replaceState(null,'',location.pathname+location.search);sb('/auth/v1/user',{tok:au.access}).then(r=>{if(r.ok){au.uid=r.j.id;au.email=r.j.email||r.j.phone||'';saveAu();tab='acct';R();sync(1)}})})();
 if(au)setTimeout(()=>sync(0),2000);
 R();
