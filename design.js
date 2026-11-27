@@ -23,7 +23,7 @@ const MX={notif:['bell','الإشعارات','#b5532f','notif']};
 const mTile=k=>{const m=MORE[k]||MX[k];const sp2=(MX[k]||[])[3],b=k=='nw'?st.tasks.filter(t=>t.type=='جديد'&&t.st=='open').length:0;return`<button class='mt' style='--c:${m[2]}' data-k='${k}' ${sp2?`data-sp='${sp2}'`:''} onclick='A.mgo2(this)'><span class='mi'>${ico(m[0],24)}${b?`<i class='bdg'>${b}</i>`:''}</span><b>${m[1]}</b><small>${E((SUBT[k]||(()=>''))())}</small></button>`};
 V.more=()=>{const n=st.set.name||'',th=(THEMES.find(x=>x.id==curTheme())||{n:'مخصص'}).n;return`<div class='mhero'><div class='av'>${E((n||'ر')[0])}</div><div style='flex:1'><b>${n?E(n):'مرحبًا بك في رِواق'}</b><small>${au?E(au.email):'بدون حساب'} · ثيم ${th}</small></div><button class='b g' data-k='set' onclick='A.mgo2(this)'>الإعدادات</button></div>${MG.map(([g,L])=>`<div class='sgrp'>${g}</div><div class='mgrid'>${L.map(mTile).join('')}</div>`).join('')}`};
 Object.assign(A,{more(){tab='more';R();scrollTo(0,0)},
-mgo2(el){const sp2=el.dataset.sp;if(sp2){tab='set';sp=sp2}else tab=el.dataset.k;XM();R();scrollTo(0,0)},
+mgo2(el){const sp2=el.dataset.sp;sp=sp2||'';tab=sp2?'set':el.dataset.k;XM();R();scrollTo(0,0)},
 theme(el){const t=THEMES.find(x=>x.id==el.dataset.id);if(!t)return;Object.assign(st.set,{accent:t.accent,bg:'color',bgc:t.bgc,gold:t.gold,tn:t.id});save();R();toast('تم تطبيق ثيم «'+t.n+'»')},
 pk0(){st.set.accent='';st.set.bg='color';st.set.bgc='#354230';st.set.gold='';st.set.tn='riwaq';save();R();toast('رجعت الألوان الافتراضية')},
 nameSet(el){st.set.name=String(el.value||'').trim().slice(0,30);save();R()},

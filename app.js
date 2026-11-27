@@ -7,7 +7,7 @@ const S=new Proxy(S0,{get:(o,k)=>(k in o||typeof k!='string')?o[k]:[k,99,'#58686
 const BI=[['en','الإنجليزي','#2f6fb5',1],['ph','الفيزياء','#7a4fb3',1],['ar','العربي','#b5532f',1],['ch','الكيمياء','#23885d',1],['ma','الرياضيات','#a0700f',1],['ca','التفاضل والتكامل','#a0700f',0],['ge','الهندسة الفراغية','#a63f6e',0]].map(([id,n,c,w])=>({id,n,c,w}));
 function applySubs(){if(!st.subs)st.subs=st.tasks.length?BI.map(x=>({...x})):[];Object.keys(S0).forEach(k=>{if(k!='x')delete S0[k]});st.subs.forEach((s,i)=>{S0[s.id]=[s.n,i,s.c]})}
 const subIds=ex=>st.subs.filter(s=>!s.h||s.id==ex).map(s=>s.id),subW=k=>{const s=st.subs.find(x=>x.id==k);return !!(s&&s.w)};
-const SP={explain:'الشرح',solve:'الحل',review:'مراجعة الأخطاء'};
+const SP={explain:'الشرح',solve:'الحل',review:'التدريب ومراجعة الأخطاء'};
 const W=[[[['ar',2],['ge',1]],[['ar',1],['ge',2]],[['ar',2],['ge',1]],[['ar',1],['ge',2]],[['ar',1],['ge',1]]],
 [[['ca',1],['ph',2]],[['ca',2],['ph',1]],[['ca',1],['ph',2]],[['ca',1],['ph',1],['ar',1]],[['ca',1],['ph',1]]],
 [[['ph',1],['ch',2]],[['ph',1],['ch',2]],[['ph',1],['ch',2]],[['ch',1]],[['ch',1]]],
@@ -29,11 +29,11 @@ function valid(o){return o&&typeof o=='object'&&Array.isArray(o.tasks)&&o.tasks.
 function toast(m,k){const t=Q('#to');t.textContent=m;t.style.background=k=='e'?'var(--rd)':'var(--ok)';t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',2800)}
 const today0=()=>{const d=new Date();d.setHours(0,0,0,0);return d},off=()=>Math.round((today0()-new Date(st.set.start+'T00:00'))/864e5),net=()=>{const s=st.set;if(s.mode!='auto')return Math.max(0,+s.manual||0);const q=t=>{const p=(t||'0:0').split(':');return +p[0]*60+ +p[1]},sl=(q(s.wake)-q(s.bed)+1440)%1440;return Math.max(0,1440-sl-s.meals-s.pray-s.rest-s.other)},fm=m=>{m=Math.round(m);const h=Math.floor(m/60),r=m%60;return h?(r?h+'س '+r+'د':h+'س'):r+'د'};
 const dateOf=o=>{const d=new Date(st.set.start+'T00:00');d.setDate(d.getDate()+o);return d.toLocaleDateString('ar',{weekday:'short',day:'numeric',month:'short'})};
-const ld=o=>st.tasks.filter(t=>t.st=='open'&&t.d===o).reduce((a,t)=>a+t.est,0);
+const ld=o=>st.tasks.filter(t=>t.st=='open'&&t.d===o).reduce((a,t)=>a+t.est,0)+(typeof fixedMin=='function'?fixedMin(o):0);
 const lbl=o=>o<0?'قبل بداية الخطة':'الأسبوع '+(Math.floor(o/7)+1)+' · اليوم '+(o%7+1)+(o%7>4?' (يوم الجديد)':'');
 const bar=p=>`<div class="bar"><i style="width:${Math.min(100,p)}%"></i></div>`;
 const chip=t=>`<span class="c" style="background:${S[t.s][2]}">${S[t.s][0]}</span>`;
-function TL(a,em,o){return a.length?a.map(t=>{const o=off(),late=t.st=='open'&&t.d!=null&&t.d<o;return`<div class="t ${t.st}" onclick="A.open('${t.id}')"><span class="ck" onclick="event.stopPropagation();A.done('${t.id}')">${t.st=='done'?'✓':''}</span>${o&&o.nochip?'':chip(t)}<div class="n">${E(o&&o.short&&t.n.startsWith(S[t.s][0]+' – ')?t.n.slice(S[t.s][0].length+3):t.n)}<div class="m">${t.type} · ${t.est} د${t.d!=null?' · '+dateOf(t.d):''}</div></div>${late?'<span class="bd late">متأخرة</span>':''}${t.st=='done'?'<span class="bd okc">تمّت</span>':''}</div>`}).join(''):`<div class="e">${em||'لا مهام هنا.'}</div>`}
+function TL(a,em,o){return a.length?a.map(t=>{const o=off(),late=t.st=='open'&&t.d!=null&&t.d<o;return`<div class="t ${t.st}" onclick="A.open('${t.id}')"><span class="ck" onclick="event.stopPropagation();A.done('${t.id}')">${t.st=='done'?'✓':''}</span>${o&&o.nochip?'':chip(t)}<div class="n">${E(o&&o.short&&t.n.startsWith(S[t.s][0]+' – ')?t.n.slice(S[t.s][0].length+3):t.n)}<div class="m">${t.type} · ${t.est} د${t.ex&&t.sv?' (شرح '+t.ex+' + حل '+t.sv+')':''}${t.d!=null?' · '+dateOf(t.d):''}</div></div>${late?'<span class="bd late">متأخرة</span>':''}${t.st=='done'?'<span class="bd okc">تمّت</span>':''}</div>`}).join(''):`<div class="e">${em||'لا مهام هنا.'}</div>`}
 
 function streak(){const s=new Set(st.sess.map(x=>x.day));st.tasks.forEach(t=>{if(t.doneAt)s.add(iso(new Date(t.doneAt)))});let n=0,d=today0();if(!s.has(iso(d)))d.setDate(d.getDate()-1);while(s.has(iso(d))){n++;d.setDate(d.getDate()-1)}return n}
 function xp(){return st.tasks.filter(t=>t.st=='done').length*50+st.sess.reduce((a,x)=>a+x.min,0)+(uq(st.q.rd)+uq(st.q.hf))*2}

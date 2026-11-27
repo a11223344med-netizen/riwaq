@@ -1,5 +1,5 @@
 let cm='m',co=null,cmo=null;
-const dd=o=>{const d=new Date(st.set.start+'T00:00');d.setDate(d.getDate()+o);return d},ofd=d=>Math.round((new Date(iso(d)+'T00:00')-new Date(st.set.start+'T00:00'))/864e5),isNd=o=>o>=0&&o%7>4;
+const dd=o=>{const d=new Date(st.set.start+'T00:00');d.setDate(d.getDate()+o);return d},ofd=d=>Math.round((new Date(iso(d)+'T00:00')-new Date(st.set.start+'T00:00'))/864e5),isNd=o=>typeof pOn=='function'&&pOn()?reserveWd(dd(o).getDay())>0:o>=0&&o%7>4;
 const _wk=V.plan;
 function dayAgenda(o){const a=st.tasks.filter(t=>t.d===o),l=ld(o),n=net(),w=Math.floor(o/7)+1,m=isNd(o)?qa():{},q=isNd(o)&&o%7==5?st.tasks.filter(t=>m[t.id]==w):[];
 return`<div class='bx ag'><div class='row' style='align-items:center'><b style='flex:2'>${dateOf(o)}</b><span class='m'>${o>=0?lbl(o):'قبل بداية الخطة'}</span></div>${l?`<div class='row'><span class='m'>الحمل ${fm(l)} من ${fm(n)}</span></div>${bar(n?l/n*100:0)}`:''}${l>n?`<div class='w'>اليوم يتجاوز المتاح. <button class='b' onclick='A.fit()'>اقتراح ضبط الحمل</button></div>`:''}${isNd(o)?`<div class='m'>يوم الدروس الجديدة</div>`:''}${q.length?`<div class='sub'>دروس جديدة هذا الأسبوع</div>${TL(q)}`:''}${a.length?TL(a):(q.length?'':`<div class='e'>لا مهام في هذا اليوم</div>`)}<button class='b g' data-o='${o}' onclick='A.editAt(this)'>+ مهمة في هذا اليوم</button></div>`}
